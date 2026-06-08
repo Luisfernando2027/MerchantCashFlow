@@ -1,26 +1,21 @@
-# MerchantCashFlow - Desafio Arquiteto de Soluções
+# MerchantCashFlow
 
-Repositório com scaffold mínimo para o desafio: dois serviços (.NET 8) usando PostgreSQL e RabbitMQ.
+Projeto demonstrativo para o desafio de Arquiteto de Soluções.
 
-Componentes:
-- LaunchesService: API para criar lançamentos (persistência em Postgres e publicação de evento no RabbitMQ).
-- ConsolidatedService: consumidor de eventos que atualiza o consolidado diário (em Postgres).
-- docker-compose.yml para rodar Postgres, RabbitMQ e os serviços em modo local.
-
-Como rodar localmente
-1. Instale Docker e Docker Compose.
-2. Na raiz do repositório, execute:
+Run local (recomendado: Docker)
+1. Instale Docker Desktop.
+2. Na raiz do projeto execute:
    docker compose up --build
-3. A API de lançamentos estará em http://localhost:5100 (POST /api/launches)
-4. O serviço de consolidado roda como background consumer e atualiza a tabela consolidated.
+3. API de lançamentos:
+   POST http://localhost:5100/api/launches
 
-Testes
-- Unit tests não foram adicionados por limitação de tempo; recomenda-se adicionar xUnit e Testcontainers para integração.
+Exemplo curl:
 
-Entrega
-- Gere um repositório público no GitHub e suba todo o conteúdo deste diretório (git add . && git commit -m "scaffold" && git push).
-- Inclua no README o link do repo para avaliação.
+curl -X POST http://localhost:5100/api/launches -H "Content-Type: application/json" -d '{\"merchantId\":\"00000000-0000-0000-0000-000000000001\",\"amount\":100.5,\"currency\":\"BRL\",\"occurredAt\":\"2026-06-01T12:00:00Z\"}'
 
-Observações
-- Arquitetura e decisões documentadas em docs/architecture.md.
-- Diagrama simples em docs/diagram.svg.
+Docs importantes:
+- docs/architecture.md -> decisões arquiteturais
+- tools/postman/Launches.postman_collection.json -> coleção Postman
+- tools/k6/loadtest.js -> script k6 para carga
+
+Nota: arquivos internos de entrevista foram removidos do repo público.
