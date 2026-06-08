@@ -5,10 +5,4 @@
 **/*.user
 *.db
 *.log
-MerchantCashFlow_project.zip
-docs/INTERVIEW.md
-docs/DELIVERABLES.md
-scripts/push_to_github.ps1
-scripts/push_with_clone.ps1
-scripts/prepare_repo.ps1
 *.user
