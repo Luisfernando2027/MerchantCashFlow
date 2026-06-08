@@ -2,8 +2,9 @@ using ConsolidatedService.Data;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using MerchantCashFlow.Contracts;
+using Microsoft.Extensions.Hosting;
 
-var builder = Host.CreateDefaultBuilder(args)
+var builder = global::Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder(args)
     .ConfigureServices((context, services) =>
     {
         var conn = context.Configuration.GetConnectionString("Postgres") ?? context.Configuration["ConnectionStrings:Postgres"];
@@ -23,6 +24,7 @@ var builder = Host.CreateDefaultBuilder(args)
         });
 
         services.AddHostedService<Worker>();
-    }).Build();
+    });
 
-await builder.RunAsync();
+var host = builder.Build();
+await host.RunAsync();

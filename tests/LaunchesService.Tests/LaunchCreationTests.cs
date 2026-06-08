@@ -1,6 +1,6 @@
 using System;
 using Xunit;
-using FluentAssertions;
+// usando FluentAssertions removido — utilizar xUnit Assert
 
 namespace LaunchesService.Tests;
 
@@ -10,6 +10,6 @@ public class LaunchCreationTests
     public void SimpleAmount_ShouldBePositiveOrNegative()
     {
         var amount = 100.5m;
-        amount.Should().BeGreaterThan(0);
+        Assert.True(amount > 0);
     }
 }

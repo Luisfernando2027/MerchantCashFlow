@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="a0cd9fdf-10b9-46e0-8cc7-62cb2b8cc31e" name="luis.oliveira@INFO01 2026-06-08 19:17:06" runUser="ONDULAPEL\luis.oliveira" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-06-08T19:17:06.1031067-03:00" queuing="2026-06-08T19:17:06.1031072-03:00" start="2026-06-08T19:17:05.5963225-03:00" finish="2026-06-08T19:17:06.1037743-03:00" />
+  <TestSettings name="default" id="902f7142-660d-4f54-9115-2f844009696e">
+    <Deployment runDeploymentRoot="luis.oliveira_INFO01_2026-06-08_19_17_06" />
+  </TestSettings>
+  <TestLists>
+    <TestList name="Resultados que não estão em uma lista" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="Todos os resultados carregados" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="0" executed="0" passed="0" failed="0" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>Error:&#xD;
+  An assembly specified in the application dependencies manifest (LaunchesService.Tests.deps.json) was not found:&#xD;
+    package: 'Humanizer.Core', version: '2.14.1'&#xD;
+    path: 'lib/net6.0/Humanizer.dll'&#xD;
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="INFO01" outcome="Error" timestamp="2026-06-08T19:17:06.0239663-03:00">
+        <Text>Processo testhost para fonte(s) 'C:\Users\luis.oliveira\source\repos\MerchantCashFlow\tests\LaunchesService.Tests\bin\Debug\net8.0\LaunchesService.Tests.dll' encerrado com erro: Error:&#xD;
+  An assembly specified in the application dependencies manifest (LaunchesService.Tests.deps.json) was not found:&#xD;
+    package: 'Humanizer.Core', version: '2.14.1'&#xD;
+    path: 'lib/net6.0/Humanizer.dll'&#xD;
+. Verifique os logs de diagnóstico para mais informações.</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>
