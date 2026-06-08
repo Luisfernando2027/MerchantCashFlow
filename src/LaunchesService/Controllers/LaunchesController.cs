@@ -27,7 +27,7 @@ public class LaunchesController : ControllerBase
         _db.Launches.Add(input);
         await _db.SaveChangesAsync();
 
-        await _publishEndpoint.Publish(new MerchantCashFlow.Contracts.LaunchCreated
+        await _publishEndpoint.Publish(new LaunchCreated
         {
             Id = input.Id,
             MerchantId = input.MerchantId,

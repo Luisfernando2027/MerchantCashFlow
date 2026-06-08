@@ -2,15 +2,9 @@ using ConsolidatedService.Data;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using MerchantCashFlow.Contracts;
-using Serilog;
-using Microsoft.Extensions.Hosting;
 
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-
-IHost host = Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder(args)
-    .UseSerilog((ctx, lc) => lc.WriteTo.Console())
-    .ConfigureServices((HostBuilderContext context, IServiceCollection services) =>
+var builder = Host.CreateDefaultBuilder(args)
+    .ConfigureServices((context, services) =>
     {
         var conn = context.Configuration.GetConnectionString("Postgres") ?? context.Configuration["ConnectionStrings:Postgres"];
         services.AddDbContext<ConsolidatedDbContext>(opt => opt.UseNpgsql(conn));
@@ -31,12 +25,4 @@ IHost host = Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder(args)
         services.AddHostedService<Worker>();
     }).Build();
 
-using (var scope = host.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<ConsolidatedDbContext>();
-    db.Database.EnsureCreated();
-}
-
-await host.RunAsync();
-
-
+await builder.RunAsync();
