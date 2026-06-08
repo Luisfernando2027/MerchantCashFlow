@@ -1,0 +1,36 @@
+{
+  "info": {
+    "name": "LaunchesService",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Create Launch",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"merchantId\": \"00000000-0000-0000-0000-000000000001\",\n  \"amount\": 123.45,\n  \"currency\": \"BRL\",\n  \"occurredAt\": \"2026-06-01T12:00:00Z\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:5100/api/launches",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5100",
+          "path": [
+            "api",
+            "launches"
+          ]
+        }
+      }
+    }
+  ]
+}
