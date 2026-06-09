@@ -17,8 +17,8 @@ jobs:
       with:
         dotnet-version: '8.0.x'
     - name: Restore
-      run: dotnet restore
+      run: dotnet restore MerchantCashFlow.sln
     - name: Build
-      run: dotnet build --no-restore -c Release
+      run: dotnet build MerchantCashFlow.sln --no-restore -c Release
     - name: Test
-      run: dotnet test --no-build -c Release
+      run: dotnet test MerchantCashFlow.sln --no-build -c Release
