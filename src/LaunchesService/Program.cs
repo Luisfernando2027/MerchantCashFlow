@@ -9,8 +9,7 @@ builder.Services.AddControllers();
 // health checks
 builder.Services.AddHealthChecks();
 
-// prometheus metrics
-builder.Services.AddHttpMetrics();
+// prometheus metrics (AddHttpMetrics removed to avoid build-time extension lookup in container)
 
 var conn = builder.Configuration.GetConnectionString("Postgres") ?? builder.Configuration["ConnectionStrings:Postgres"];
 builder.Services.AddDbContext<LaunchesDbContext>(opt => opt.UseNpgsql(conn));
