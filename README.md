@@ -72,6 +72,25 @@ Segurança e recomendações
 - Não commitar segredos em repositório. Use GitHub Secrets / Key Vault.
 - Revisar dependências com alertas de segurança (ex.: OpenTelemetry.Exporter.Zipkin) e planejar atualização.
 
+Estimativa de custos (exemplo)
+-----------------------------
+Estimativas mensais aproximadas para uma implantação em nuvem (valores exemplares):
+
+Serviço/Componente    | Configuração típica        | Estimativa/mês (USD)
+--------------------- | ------------------------- | -------------------
+PostgreSQL (managed)  | db.t3.medium (single AZ)  | 40 - 120
+RabbitMQ (managed)    | small cluster              | 20 - 80
+App Service / Container| 2 x small instances       | 30 - 100
+Storage / Logs        | 10GB de logs / month      | 5 - 20
+Monitoring (Prometheus/Grafana managed) | basic plan | 10 - 50
+Zipkin / Traces       | OTLP collector (small)    | 5 - 25
+
+Total estimado aproximado: 110 - 395 USD / mês
+
+Observações:
+- Valores dependem de provedores (AWS/Azure/GCP) e de opções gerenciadas vs self-hosted.
+- Em ambiente de produção, considerar HA (multi-AZ) e backups, o que aumenta custo.
+
 Próximos passos sugeridos
 ------------------------
 1. Adicionar ADRs adicionais (deploy, retries, DLQ).
