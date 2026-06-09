@@ -1,0 +1,29 @@
+Instruções e scripts para validar o projeto (independente do Git)
+
+Pré-requisitos:
+- Docker Desktop instalado
+- dotnet SDK 8+
+
+Passos:
+1) Clonar o repositório (ou descompactar os arquivos enviados)
+2) Na raiz do projeto executar:
+   docker compose up --build
+
+Endpoints:
+- API Lançamentos: POST http://localhost:5100/api/launches
+- Health: GET http://localhost:5100/health
+- Metrics Prometheus: GET http://localhost:5100/metrics
+- Zipkin UI: http://localhost:9411
+
+Scripts úteis (PowerShell):
+$body = '{ "merchantId":"00000000-0000-0000-0000-000000000001", "amount":100.5, "currency":"BRL", "occurredAt":"2026-06-01T12:00:00Z" }'
+Invoke-RestMethod -Method Post -Uri http://localhost:5100/api/launches -ContentType 'application/json' -Body $body
+
+Logs & Evidence:
+- docker compose logs launches --tail=200 > docker_logs_launches.txt
+- docker compose logs consolidated --tail=200 > docker_logs_consolidated.txt
+- curl http://localhost:5100/metrics > metrics.txt
+- Compress-Archive -Path docker_logs_launches.txt,docker_logs_consolidated.txt,metrics.txt -DestinationPath evidence.zip -Force
+
+Observações de entrega:
+- Contém código-fonte de ambas as services, contratos compartilhados, scripts de inicialização e documento DELIVERY.txt para facilitar avaliação técnica offline.

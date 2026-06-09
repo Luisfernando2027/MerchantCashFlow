@@ -8,7 +8,14 @@ using OpenTelemetry.Trace;
 using OpenTelemetry.Resources;
 
 var builder = global::Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder(args)
-    .UseSerilog((context, cfg) => cfg.WriteTo.Console())
+    .UseSerilog((context, cfg) =>
+    {
+        cfg.Enrich.FromLogContext()
+           .Enrich.WithEnvironmentName()
+           .Enrich.WithThreadId()
+           .WriteTo.Console()
+           .WriteTo.File("logs/consolidated-.log", rollingInterval: Serilog.RollingInterval.Day);
+    })
     .ConfigureServices((context, services) =>
     {
         var conn = context.Configuration.GetConnectionString("Postgres") ?? context.Configuration["ConnectionStrings:Postgres"];

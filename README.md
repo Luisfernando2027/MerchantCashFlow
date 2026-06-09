@@ -49,6 +49,15 @@ Invoke-RestMethod -Method Post -Uri http://localhost:5100/api/launches -ContentT
 Metrics
 - Endpoint Prometheus: GET http://localhost:5100/metrics
 
+Tracing and logs
+- Zipkin (traces): available at http://localhost:9411 (configured in docker-compose)
+- Seq (optional): configure Logging:SeqUrl in appsettings or environment to point to your Seq instance
+
+How to view traces
+1. Start the stack: docker compose up --build
+2. Open Zipkin UI: http://localhost:9411
+3. Execute a POST to /api/launches to generate traces and observe them in Zipkin
+
 Evidências e release
 - evidence.zip contém docker_logs.txt e response.json com teste E2E.
 - Para atualizar a release (opcional): use gh CLI ou faça upload manual em GitHub Releases.

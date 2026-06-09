@@ -7,10 +7,19 @@ using Serilog;
 var builder = WebApplication.CreateBuilder(args);
 
 // Serilog
+var seqUrl = builder.Configuration["Logging:SeqUrl"];
 builder.Host.UseSerilog((context, cfg) =>
 {
     cfg.Enrich.FromLogContext()
-       .WriteTo.Console();
+       .Enrich.WithEnvironmentName()
+       .Enrich.WithThreadId()
+       .WriteTo.Console()
+       .WriteTo.File("logs/launches-.log", rollingInterval: Serilog.RollingInterval.Day);
+
+    if (!string.IsNullOrEmpty(seqUrl))
+    {
+        cfg.WriteTo.Seq(seqUrl);
+    }
 });
 
 
