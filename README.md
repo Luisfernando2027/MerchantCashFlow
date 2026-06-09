@@ -46,6 +46,9 @@ Criar lançamento de teste (PowerShell):
 $body = '{ "merchantId":"00000000-0000-0000-0000-000000000001", "amount":100.5, "currency":"BRL", "occurredAt":"2026-06-01T12:00:00Z" }'
 Invoke-RestMethod -Method Post -Uri http://localhost:5100/api/launches -ContentType 'application/json' -Body $body
 
+Metrics
+- Endpoint Prometheus: GET http://localhost:5100/metrics
+
 Evidências e release
 - evidence.zip contém docker_logs.txt e response.json com teste E2E.
 - Para atualizar a release (opcional): use gh CLI ou faça upload manual em GitHub Releases.
