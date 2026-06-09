@@ -1,72 +1,83 @@
-# MerchantCashFlow
+# MerchantCashFlow - Solution Architecture Challenge
 
-Projeto demonstrativo para o desafio de Arquiteto de Soluções.
+Visão geral
+------------
+MerchantCashFlow é uma solução demonstrativa para o desafio de Arquiteto de Soluções.
+Implementa um fluxo de lançamentos financeiros (LaunchesService) e um consumidor que gera consolidações diárias (ConsolidatedService), usando RabbitMQ e PostgreSQL.
 
-Run local (recomendado: Docker)
-1. Instale Docker Desktop.
-2. Na raiz do projeto execute:
+Arquitetura (resumo)
+--------------------
+- LaunchesService: API REST responsável por receber lançamentos e publicar eventos.
+- ConsolidatedService: consumidor que processa eventos e atualiza as tabelas consolidadas.
+- Shared: contratos compartilhados entre serviços para evitar conflitos de tipos.
+- Infra: PostgreSQL (dados), RabbitMQ (mensageria), Prometheus (métricas), Zipkin (traces).
+
+Requisitos atendidos
+--------------------
+- Serviços desacoplados, processamento assíncrono via RabbitMQ.
+- Idempotência no consumidor (ProcessedEvents).
+- Migrations EF Core para ambas as bases.
+- Observabilidade: /health, /metrics (Prometheus), logs Serilog e traces (Zipkin).
+- Docker + Docker Compose para reproduzir o ambiente local.
+- CI: GitHub Actions (build + test).
+
+Como executar (rápido)
+---------------------
+Pré-requisitos: Docker Desktop e dotnet SDK 8+
+
+1) Na raiz do repositório:
+
    docker compose up --build
-3. API de lançamentos:
-   POST http://localhost:5100/api/launches
 
-Exemplo curl:
+2) Endpoints úteis:
 
-curl -X POST http://localhost:5100/api/launches -H "Content-Type: application/json" -d '{\"merchantId\":\"00000000-0000-0000-0000-000000000001\",\"amount\":100.5,\"currency\":\"BRL\",\"occurredAt\":\"2026-06-01T12:00:00Z\"}'
+   - API Lançamentos (POST): http://localhost:5100/api/launches
+   - Health: http://localhost:5100/health
+   - Metrics (Prometheus): http://localhost:5100/metrics
+   - Zipkin UI (traces): http://localhost:9411
 
-Docs importantes:
-- docs/architecture.md -> decisões arquiteturais
-- tools/postman/Launches.postman_collection.json -> coleção Postman
-- tools/k6/loadtest.js -> script k6 para carga
+Exemplo (PowerShell):
 
-Nota: arquivos internos de entrevista foram removidos do repo público.
+   $body = '{ "merchantId":"00000000-0000-0000-0000-000000000001", "amount":100.5, "currency":"BRL", "occurredAt":"2026-06-01T12:00:00Z" }'
+   Invoke-RestMethod -Method Post -Uri http://localhost:5100/api/launches -ContentType 'application/json' -Body $body
 
-Health and CI
-- Health endpoint (LaunchesService): GET /health
-- CI: GitHub Actions workflow (.github/workflows/dotnet.yml) roda build/test em pushes
+Observabilidade
+---------------
+- Prometheus metrics disponíveis em /metrics.
+- Health checks em /health.
+- Traces enviados para Zipkin (http://localhost:9411).
+- Logs estruturados com Serilog; opção de Seq configurável via Logging:SeqUrl.
 
-Como aplicar migrations (PowerShell)
-Execute cada linha separadamente na raiz do repositório:
+Testes
+------
+- Unit tests: dotnet test MerchantCashFlow.sln
+- Teste de carga: tools/k6/loadtest.js (ex.: target 50 req/s)
 
-Set-Location C:\Users\luis.oliveira\source\repos\MerchantCashFlow
-dotnet tool install --global dotnet-ef
-dotnet restore MerchantCashFlow.sln
-dotnet ef migrations add Initial_Launches -p src/LaunchesService/LaunchesService.csproj -s src/LaunchesService/LaunchesService.csproj --context LaunchesDbContext
-dotnet ef migrations add Initial_Consolidated -p src/ConsolidatedService/ConsolidatedService.csproj -s src/ConsolidatedService/ConsolidatedService.csproj --context ConsolidatedDbContext
+Decisões arquiteturais (resumo)
+------------------------------
+- Mensageria (RabbitMQ) para desacoplamento e resiliência.
+- Serviços separados para permitir escalabilidade independente e tolerância a falhas.
 
-Como aplicar as migrations no banco (PowerShell)
-dotnet ef database update -p src/LaunchesService/LaunchesService.csproj -s src/LaunchesService/LaunchesService.csproj --context LaunchesDbContext
-dotnet ef database update -p src/ConsolidatedService/ConsolidatedService.csproj -s src/ConsolidatedService/ConsolidatedService.csproj --context ConsolidatedDbContext
+Documentação adicional
+----------------------
+- docs/architecture.md: diagrama e descrição geral
+- docs/adr/ADR-001-architecture.md: decisão arquitetural principal
 
-Como rodar localmente (Docker)
-Execute cada linha separadamente na raiz do repositório:
-docker compose build --no-cache
-docker compose up -d
-Verificar health: curl.exe -v http://localhost:5100/health
-Criar lançamento de teste (PowerShell):
-$body = '{ "merchantId":"00000000-0000-0000-0000-000000000001", "amount":100.5, "currency":"BRL", "occurredAt":"2026-06-01T12:00:00Z" }'
-Invoke-RestMethod -Method Post -Uri http://localhost:5100/api/launches -ContentType 'application/json' -Body $body
+Entrega e evidências
+--------------------
+- Release v1.0.0 contém um evidence.zip com logs e captura de execução (se necessário).
 
-Metrics
-- Endpoint Prometheus: GET http://localhost:5100/metrics
+Segurança e recomendações
+------------------------
+- Não commitar segredos em repositório. Use GitHub Secrets / Key Vault.
+- Revisar dependências com alertas de segurança (ex.: OpenTelemetry.Exporter.Zipkin) e planejar atualização.
 
-Tracing and logs
-- Zipkin (traces): available at http://localhost:9411 (configured in docker-compose)
-- Seq (optional): configure Logging:SeqUrl in appsettings or environment to point to your Seq instance
-
-How to view traces
-1. Start the stack: docker compose up --build
-2. Open Zipkin UI: http://localhost:9411
-3. Execute a POST to /api/launches to generate traces and observe them in Zipkin
-
-Evidências e release
-- evidence.zip contém docker_logs.txt e response.json com teste E2E.
-- Para atualizar a release (opcional): use gh CLI ou faça upload manual em GitHub Releases.
-
-Checklist final antes do envio
-- Confirmar README e docs atualizados
-- Gerar e commitar migrations (se necessário)
-- Executar docker compose e validar E2E
-- Empacotar evidências e anexar à release
+Próximos passos sugeridos
+------------------------
+1. Adicionar ADRs adicionais (deploy, retries, DLQ).
+2. Adicionar diagrama C4 em docs/architecture.md (draw.io ou ASCII).
+3. Automatizar E2E e carga no CI (opcional).
 
 Contato
-- Repo público: https://github.com/Luisfernando2027/MerchantCashFlow
+-------
+Repo: https://github.com/Luisfernando2027/MerchantCashFlow
