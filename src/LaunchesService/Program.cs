@@ -2,8 +2,31 @@ using LaunchesService.Data;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Prometheus;
+using Serilog;
+using OpenTelemetry.Trace;
+using OpenTelemetry.Resources;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Serilog
+builder.Host.UseSerilog((context, cfg) =>
+{
+    cfg.Enrich.FromLogContext()
+       .WriteTo.Console();
+});
+
+// OpenTelemetry Tracing
+builder.Services.AddOpenTelemetryTracing(otel =>
+{
+    otel.SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("LaunchesService"))
+        .AddAspNetCoreInstrumentation()
+        .AddHttpClientInstrumentation()
+        .AddSource("MassTransit")
+        .AddZipkinExporter(options =>
+        {
+            options.Endpoint = new Uri(builder.Configuration["Tracing:ZipkinUrl"] ?? "http://zipkin:9411/api/v2/spans");
+        });
+});
 
 builder.Services.AddControllers();
 // health checks

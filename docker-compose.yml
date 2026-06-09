@@ -18,6 +18,10 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+  zipkin:
+    image: openzipkin/zipkin:2.23.4
+    ports:
+      - "9411:9411"
   launches:
     build:
       context: .
@@ -26,6 +30,7 @@ services:
       - ConnectionStrings__Postgres=Host=postgres;Port=5432;Database=merchantdb;Username=merchant;Password=merchantpass
       - RabbitMQ__Host=rabbitmq
       - RabbitMQ__Exchange=launches_exchange
+      - Tracing__ZipkinUrl=http://zipkin:9411/api/v2/spans
     depends_on:
       - postgres
       - rabbitmq
@@ -39,6 +44,7 @@ services:
       - ConnectionStrings__Postgres=Host=postgres;Port=5432;Database=merchantdb;Username=merchant;Password=merchantpass
       - RabbitMQ__Host=rabbitmq
       - RabbitMQ__Exchange=launches_exchange
+      - Tracing__ZipkinUrl=http://zipkin:9411/api/v2/spans
     depends_on:
       - postgres
       - rabbitmq
