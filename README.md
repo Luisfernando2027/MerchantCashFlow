@@ -122,10 +122,11 @@ Invoke-RestMethod `
 
 - Release v1.0.0 contém um evidence.zip com logs e captura de execução (se necessário).
 
-## Segurança e recomendações
+## Considerações de Segurança
 
-- Não commitar segredos em repositório. Use GitHub Secrets / Key Vault.
-- Revisar dependências com alertas de segurança (ex.: OpenTelemetry.Exporter.Zipkin) e planejar atualização.
+- Segredos e credenciais devem ser armazenados em provedores seguros como GitHub Secrets, Azure Key Vault ou AWS Secrets Manager.
+- Comunicação entre serviços pode ser evoluída com TLS mútuo em ambientes produtivos.
+- O pipeline CI/CD pode ser complementado com análise automática de vulnerabilidades e dependências.
 
 ## Estimativa de custos (exemplo)
 
@@ -146,11 +147,12 @@ Observações:
 - Valores dependem de provedores (AWS/Azure/GCP) e de opções gerenciadas vs self-hosted.
 - Em ambiente de produção, considerar HA (multi-AZ) e backups, o que aumenta custo.
 
-## Próximos passos sugeridos
+## Evoluções Futuras
 
-1. Adicionar ADRs adicionais (deploy, retries, DLQ).
-2. Adicionar diagrama C4 em docs/architecture.md (draw.io ou ASCII).
-3. Automatizar E2E e carga no CI (opcional).
+1. Implementar Dead Letter Queue (DLQ) para cenários avançados de tratamento de falhas.
+2. Adicionar diagrama C4 detalhando os níveis de contexto, containers e componentes.
+3. Automatizar testes end-to-end e de carga no pipeline CI/CD.
+4. Evoluir a solução para execução em Kubernetes com autoscaling horizontal.
 
 ## Contato
 
